@@ -1,11 +1,11 @@
 name: april_flutter_screen_adapter
-description: A Flutter version of the screen adaptation package..
-version: 0.0.1
-homepage: ''
+description: A Flutter version of the screen adaptation package.
+version: 1.0.0
+homepage: 'https://github.com/AAAAAApril/april_flutter_screen_adapter'
 
 environment:
-  sdk: '>=3.0.2 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=2.17.0 <4.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
@@ -16,3 +16,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
 flutter:
+
+# 发布插件命令
+# flutter packages pub publish --server=https://pub.dartlang.org

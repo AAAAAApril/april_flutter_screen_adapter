@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'screen_adapter_widgets_flutter_binding.dart';
 
 class ScreenAdapter {
+  static WidgetsBinding ensureInitialized() => ScreenAdapterWidgetsFlutterBinding.ensureInitialized();
+
   static void runApp(
     Widget app, {
     double designWidth = 375,
