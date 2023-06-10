@@ -5,13 +5,21 @@
 ```dart
 
 void main() {
-  ScreenAdapter.ensureInitialized();
   ScreenAdapter.runApp(
     const MyApp(),
     designWidth: 400,
   );
 }
 
+```
+
+or
+
+```dart
+void main() {
+  ScreenAdapter.ensureInitialized(designWidth: 400);
+  ScreenAdapter.runApp(const MyApp());
+}
 ```
 
 * 2、
