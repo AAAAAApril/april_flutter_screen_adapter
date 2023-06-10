@@ -2,10 +2,8 @@ import 'package:april_flutter_screen_adapter/april_flutter_screen_adapter.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  ScreenAdapter.runApp(
-    const MyApp(),
-    designWidth: 400,
-  );
+  ScreenAdapter.ensureInitialized(designWidth: 400);
+  ScreenAdapter.runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
