@@ -7,7 +7,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
+class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding
+    with ScreenAdapterGestureBinding, ScreenAdapterRendererBinding {
   ///设计稿宽度
   static double _designWidth = 375;
 
@@ -40,59 +41,11 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
     if (maybeData == null) {
       return child;
     }
-    final ui.FlutterView view = View.of(context);
-    final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(_designWidth);
     return MediaQuery(
-      data: maybeData.copyWith(
-        size: view.physicalSize / devicePixelRatio,
-        devicePixelRatio: devicePixelRatio,
-        textScaleFactor: textScaleFactor,
-        padding: EdgeInsets.fromViewPadding(view.padding, devicePixelRatio),
-        viewPadding: EdgeInsets.fromViewPadding(view.viewPadding, devicePixelRatio),
-        viewInsets: EdgeInsets.fromViewPadding(view.viewInsets, devicePixelRatio),
-        systemGestureInsets: EdgeInsets.fromViewPadding(view.systemGestureInsets, devicePixelRatio),
-        // displayFeatures: _decodeDisplayFeatures(
-        //   displayFeature: view.displayFeatures,
-        //   bounds: displayFeaturesBounds,
-        //   type: displayFeaturesType,
-        //   state: displayFeaturesState,
-        //   devicePixelRatio: devicePixelRatio,
-        //   realDevicePixelRatio: view.devicePixelRatio,
-        // ),
-      ),
+      data: context.adaptMediaQueryDataByDesignWidth(_designWidth),
       child: child,
     );
   }
-
-  // /// TODO 把用真实 [devicePixelRatio] 计算过的 [DisplayFeature] 转换为目标 [devicePixelRatio] 计算后的值
-  // static List<DisplayFeature> _decodeDisplayFeatures({
-  //   required List<DisplayFeature> displayFeature,
-  //   required List<double> bounds,
-  //   required List<int> type,
-  //   required List<int> state,
-  //   required double devicePixelRatio,
-  //   required double realDevicePixelRatio,
-  // }) {
-  //   assert(bounds.length / 4 == type.length, 'Bounds are rectangles, requiring 4 measurements each');
-  //   assert(type.length == state.length);
-  //   final List<DisplayFeature> result = <DisplayFeature>[];
-  //   for (int i = 0; i < type.length; i++) {
-  //     final int rectOffset = i * 4;
-  //     result.add(DisplayFeature(
-  //       bounds: Rect.fromLTRB(
-  //         bounds[rectOffset] / devicePixelRatio,
-  //         bounds[rectOffset + 1] / devicePixelRatio,
-  //         bounds[rectOffset + 2] / devicePixelRatio,
-  //         bounds[rectOffset + 3] / devicePixelRatio,
-  //       ),
-  //       type: DisplayFeatureType.values[type[i]],
-  //       state: state[i] < DisplayFeatureState.values.length
-  //           ? DisplayFeatureState.values[state[i]]
-  //           : DisplayFeatureState.unknown,
-  //     ));
-  //   }
-  //   return result;
-  // }
 
   static ScreenAdapterWidgetsFlutterBinding? _instance;
 
@@ -101,13 +54,9 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
   ScreenAdapterWidgetsFlutterBinding._() {
     _instance = this;
   }
+}
 
-  @override
-  void initInstances() {
-    super.initInstances();
-    platformDispatcher.onPointerDataPacket = _handlePointerDataPacket;
-  }
-
+mixin ScreenAdapterRendererBinding on RendererBinding {
   @override
   ViewConfiguration createViewConfiguration() {
     // final FlutterView view = platformDispatcher.implicitView!;
@@ -117,16 +66,24 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
     //   devicePixelRatio: devicePixelRatio,
     // );
     final ui.FlutterView view = platformDispatcher.implicitView!;
-    final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(_designWidth);
+    final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(
+      ScreenAdapterWidgetsFlutterBinding._designWidth,
+    );
     return ViewConfiguration(
       size: view.physicalSize / devicePixelRatio,
       devicePixelRatio: devicePixelRatio,
     );
   }
+}
 
-  //====================================
-
+mixin ScreenAdapterGestureBinding on GestureBinding {
   final Queue<PointerEvent> _pendingPointerEvents = Queue<PointerEvent>();
+
+  @override
+  void initInstances() {
+    super.initInstances();
+    platformDispatcher.onPointerDataPacket = _handlePointerDataPacket;
+  }
 
   @override
   void unlocked() {
@@ -140,7 +97,7 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
       _pendingPointerEvents.addAll(
         PointerEventConverter.expand(
           packet.data,
-          view.physicalSize.devicePixelRatioByWidth(_designWidth),
+          view.physicalSize.devicePixelRatioByWidth(ScreenAdapterWidgetsFlutterBinding._designWidth),
         ),
       );
       if (!locked) {
