@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui' as ui;
 
+import 'package:april_flutter_screen_adapter/src/extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -40,9 +41,7 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
       return child;
     }
     final ui.FlutterView view = View.of(context);
-    final double devicePixelRatio =
-        (view.physicalSize.width < view.physicalSize.height ? view.physicalSize.width : view.physicalSize.height) /
-            _designWidth;
+    final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(_designWidth);
     return MediaQuery(
       data: maybeData.copyWith(
         size: view.physicalSize / devicePixelRatio,
@@ -118,9 +117,7 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
     //   devicePixelRatio: devicePixelRatio,
     // );
     final ui.FlutterView view = platformDispatcher.implicitView!;
-    final double devicePixelRatio =
-        (view.physicalSize.width < view.physicalSize.height ? view.physicalSize.width : view.physicalSize.height) /
-            _designWidth;
+    final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(_designWidth);
     return ViewConfiguration(
       size: view.physicalSize / devicePixelRatio,
       devicePixelRatio: devicePixelRatio,
@@ -143,8 +140,7 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
       _pendingPointerEvents.addAll(
         PointerEventConverter.expand(
           packet.data,
-          (view.physicalSize.width < view.physicalSize.height ? view.physicalSize.width : view.physicalSize.height) /
-              _designWidth,
+          view.physicalSize.devicePixelRatioByWidth(_designWidth),
         ),
       );
       if (!locked) {
