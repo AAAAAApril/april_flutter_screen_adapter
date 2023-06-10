@@ -29,7 +29,9 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
       return child;
     }
     final ui.FlutterView view = ui.PlatformDispatcher.instance.implicitView!;
-    final double devicePixelRatio = view.physicalSize.width / _designWidth;
+    final double devicePixelRatio =
+        (view.physicalSize.width < view.physicalSize.height ? view.physicalSize.width : view.physicalSize.height) /
+            _designWidth;
     return MediaQuery(
       data: maybeData.copyWith(
         size: view.physicalSize / devicePixelRatio,
@@ -115,7 +117,9 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
     //   devicePixelRatio: devicePixelRatio,
     // );
     final ui.FlutterView view = platformDispatcher.implicitView!;
-    final double devicePixelRatio = view.physicalSize.width / _designWidth;
+    final double devicePixelRatio =
+        (view.physicalSize.width < view.physicalSize.height ? view.physicalSize.width : view.physicalSize.height) /
+            _designWidth;
     return ViewConfiguration(
       size: view.physicalSize / devicePixelRatio,
       devicePixelRatio: devicePixelRatio,
@@ -136,10 +140,12 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
   void _handlePointerDataPacket(ui.PointerDataPacket packet) {
     try {
       debugPrint('>>>April<<<.[_handlePointerDataPacket.try]');
+      final ui.FlutterView view = platformDispatcher.implicitView!;
       _pendingPointerEvents.addAll(
         PointerEventConverter.expand(
           packet.data,
-          ui.PlatformDispatcher.instance.implicitView!.physicalSize.width / _designWidth,
+          (view.physicalSize.width < view.physicalSize.height ? view.physicalSize.width : view.physicalSize.height) /
+              _designWidth,
         ),
       );
       if (!locked) {
