@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Compat `DisplayFeature`.
+
 ## 1.1.0
 
 * Fix a bug that does not respond to gestures.

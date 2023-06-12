@@ -19,21 +19,26 @@ extension BuildContextExt on BuildContext {
       viewPadding: EdgeInsets.fromViewPadding(view.viewPadding, devicePixelRatio),
       viewInsets: EdgeInsets.fromViewPadding(view.viewInsets, devicePixelRatio),
       systemGestureInsets: EdgeInsets.fromViewPadding(view.systemGestureInsets, devicePixelRatio),
-      // TODO 需要验证对不对
-      displayFeatures: view.displayFeatures
-          .map<DisplayFeature>(
-            (e) => DisplayFeature(
-              bounds: Rect.fromLTRB(
-                view.devicePixelRatio * e.bounds.left / devicePixelRatio,
-                view.devicePixelRatio * e.bounds.top / devicePixelRatio,
-                view.devicePixelRatio * e.bounds.right / devicePixelRatio,
-                view.devicePixelRatio * e.bounds.bottom / devicePixelRatio,
-              ),
-              type: e.type,
-              state: e.state,
-            ),
-          )
-          .toList(growable: false),
+      displayFeatures: view.transformDisplayFeature(devicePixelRatio),
     );
+  }
+}
+
+extension on FlutterView {
+  List<DisplayFeature> transformDisplayFeature(double anotherDevicePixelRatio) {
+    return displayFeatures
+        .map<DisplayFeature>(
+          (e) => DisplayFeature(
+            bounds: Rect.fromLTRB(
+              devicePixelRatio * e.bounds.left / anotherDevicePixelRatio,
+              devicePixelRatio * e.bounds.top / anotherDevicePixelRatio,
+              devicePixelRatio * e.bounds.right / anotherDevicePixelRatio,
+              devicePixelRatio * e.bounds.bottom / anotherDevicePixelRatio,
+            ),
+            type: e.type,
+            state: e.state,
+          ),
+        )
+        .toList(growable: false);
   }
 }

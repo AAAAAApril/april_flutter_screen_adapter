@@ -1,6 +1,6 @@
 name: april_flutter_screen_adapter
 description: A Flutter version of the screen adaptation package.
-version: 1.1.0
+version: 1.1.1
 homepage: 'https://github.com/AAAAAApril/april_flutter_screen_adapter'
 
 environment:

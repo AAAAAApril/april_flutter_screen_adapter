@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:april_flutter_screen_adapter/src/extensions.dart';
 import 'package:flutter/gestures.dart';
@@ -11,6 +11,8 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding
     with ScreenAdapterGestureBinding, ScreenAdapterRendererBinding {
   ///设计稿宽度
   static double _designWidth = 375;
+
+  static double get designWidth => _designWidth;
 
   static WidgetsBinding ensureInitialized({double? designWidth}) {
     if (_instance == null) {
@@ -32,21 +34,6 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding
       ..scheduleWarmUpFrame();
   }
 
-  static Widget compatMediaQuery(
-    BuildContext context,
-    Widget child, {
-    double? textScaleFactor,
-  }) {
-    final MediaQueryData? maybeData = MediaQuery.maybeOf(context);
-    if (maybeData == null) {
-      return child;
-    }
-    return MediaQuery(
-      data: context.adaptMediaQueryDataByDesignWidth(_designWidth),
-      child: child,
-    );
-  }
-
   static ScreenAdapterWidgetsFlutterBinding? _instance;
 
   static WidgetsBinding get instance => _instance!;
@@ -59,13 +46,7 @@ class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding
 mixin ScreenAdapterRendererBinding on RendererBinding {
   @override
   ViewConfiguration createViewConfiguration() {
-    // final FlutterView view = platformDispatcher.implicitView!;
-    // final double devicePixelRatio = view.devicePixelRatio;
-    // return ViewConfiguration(
-    //   size: view.physicalSize / devicePixelRatio,
-    //   devicePixelRatio: devicePixelRatio,
-    // );
-    final ui.FlutterView view = platformDispatcher.implicitView!;
+    final FlutterView view = platformDispatcher.implicitView!;
     final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(
       ScreenAdapterWidgetsFlutterBinding._designWidth,
     );
@@ -91,9 +72,9 @@ mixin ScreenAdapterGestureBinding on GestureBinding {
     _flushPointerEventQueue();
   }
 
-  void _handlePointerDataPacket(ui.PointerDataPacket packet) {
+  void _handlePointerDataPacket(PointerDataPacket packet) {
     try {
-      final ui.FlutterView view = platformDispatcher.implicitView!;
+      final FlutterView view = platformDispatcher.implicitView!;
       _pendingPointerEvents.addAll(
         PointerEventConverter.expand(
           packet.data,
