@@ -12,7 +12,11 @@ extension BuildContextExt on BuildContext {
   MediaQueryData adaptMediaQueryDataByDesignWidth(double designWidth) {
     final FlutterView view = View.of(this);
     final double devicePixelRatio = view.physicalSize.devicePixelRatioByWidth(designWidth);
-    return MediaQuery.of(this).copyWith(
+    final MediaQueryData data = MediaQuery.of(this);
+    if (data.devicePixelRatio == devicePixelRatio) {
+      return data;
+    }
+    return data.copyWith(
       size: view.physicalSize / devicePixelRatio,
       devicePixelRatio: devicePixelRatio,
       padding: EdgeInsets.fromViewPadding(view.padding, devicePixelRatio),
