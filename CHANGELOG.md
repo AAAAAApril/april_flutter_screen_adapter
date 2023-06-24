@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Limit the only way to init `ScreenAdapter`.
+
 ## 1.1.1
 
 * Compat `DisplayFeature`.

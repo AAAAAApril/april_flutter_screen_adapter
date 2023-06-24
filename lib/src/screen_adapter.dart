@@ -1,24 +1,20 @@
 import 'package:april_flutter_screen_adapter/src/extensions.dart';
 import 'package:flutter/widgets.dart';
 
-import 'screen_adapter_widgets_flutter_binding.dart';
+import 'bindings/widgets_flutter_binding.dart';
 
 class ScreenAdapter {
   static WidgetsBinding ensureInitialized({
     required double designWidth,
-  }) =>
-      ScreenAdapterWidgetsFlutterBinding.ensureInitialized(
-        designWidth: designWidth,
-      );
+  }) {
+    _designWidth = designWidth;
+    return ScreenAdapterWidgetsFlutterBinding.ensureInitialized();
+  }
 
-  static void runApp(
-    Widget app, {
-    double? designWidth,
-  }) =>
-      ScreenAdapterWidgetsFlutterBinding.runApp(
-        app,
-        designWidth: designWidth,
-      );
+  ///设计稿宽度
+  static late final double _designWidth;
+
+  static double get designWidth => _designWidth;
 
   static Widget compatBuilder(
     BuildContext context,
@@ -39,7 +35,7 @@ class ScreenAdapter {
   }
 
   static MediaQueryData compatMediaQueryData(BuildContext context) {
-    return context.adaptMediaQueryDataByDesignWidth(ScreenAdapterWidgetsFlutterBinding.designWidth);
+    return context.adaptMediaQueryDataByDesignWidth(designWidth);
   }
 
   ScreenAdapter._();

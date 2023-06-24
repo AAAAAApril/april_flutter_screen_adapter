@@ -4,19 +4,9 @@
 
 ```dart
 void main() {
-  ScreenAdapter.runApp(
-    const MyApp(),
-    designWidth: 400,
-  );
-}
-```
-
-or
-
-```dart
-void main() {
+  // over here !!!
   ScreenAdapter.ensureInitialized(designWidth: 400);
-  ScreenAdapter.runApp(const MyApp());
+  runApp(const MyApp());
 }
 ```
 
