@@ -24,13 +24,17 @@ mixin ScreenAdapterGestureBinding on GestureBinding {
 
   void _handlePointerDataPacket(PointerDataPacket packet) {
     try {
-      final FlutterView view = platformDispatcher.implicitView!;
       _pendingPointerEvents.addAll(
         PointerEventConverter.expand(
           packet.data,
-          view.physicalSize.devicePixelRatioByWidth(
-            ScreenAdapter.designWidth,
-          ),
+          (viewId) {
+            if (viewId == 0) {
+              return platformDispatcher.implicitView?.physicalSize.devicePixelRatioByWidth(
+                ScreenAdapter.designWidth,
+              );
+            }
+            return platformDispatcher.view(id: viewId)?.devicePixelRatio;
+          },
         ),
       );
       if (!locked) {

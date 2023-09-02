@@ -70,22 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton.extended(
-            onPressed: _incrementCounter,
-            tooltip: 'Increment',
-            icon: const Icon(Icons.add),
-            label: const Text('添加'),
-          ),
-          FloatingActionButton.extended(
-            onPressed: _incrementCounter,
-            tooltip: 'Increment',
-            icon: const Icon(Icons.add),
-            label: const Text('添加'),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        icon: const Icon(Icons.add),
+        label: const Text('添加'),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
