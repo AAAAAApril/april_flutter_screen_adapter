@@ -2,7 +2,7 @@ import 'package:april_flutter_screen_adapter/april_flutter_screen_adapter.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  ScreenAdapter.ensureInitialized(designWidth: 400);
+  ScreenAdapter.ensureInitialized(designWidth: (binding, view) => 400);
   runApp(const MyApp());
 }
 

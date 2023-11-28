@@ -1,20 +1,24 @@
 import 'package:april_flutter_screen_adapter/src/extensions.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'bindings/widgets_flutter_binding.dart';
+import 'widgets_flutter_binding.dart';
+
+typedef DesignWidthCreator = double Function(RendererBinding binding, FlutterView view);
 
 class ScreenAdapter {
   static WidgetsBinding ensureInitialized({
-    required double designWidth,
+    required DesignWidthCreator designWidth,
   }) {
-    _designWidth = designWidth;
+    _designWidthCreator = designWidth;
     return ScreenAdapterWidgetsFlutterBinding.ensureInitialized();
   }
 
-  ///设计稿宽度
-  static late final double _designWidth;
+  ///返回每个 [FlutterView] 对应的设计稿宽度
+  static late final DesignWidthCreator _designWidthCreator;
 
-  static double get designWidth => _designWidth;
+  static DesignWidthCreator get designWidthCreator => _designWidthCreator;
 
   static Widget compatBuilder(
     BuildContext context,
@@ -28,14 +32,15 @@ class ScreenAdapter {
     }
     return MediaQuery(
       data: compatMediaQueryData(context).copyWith(
-        textScaleFactor: textScaleFactor,
+        textScaler: textScaleFactor == null ? null : TextScaler.linear(textScaleFactor),
       ),
       child: child,
     );
   }
 
   static MediaQueryData compatMediaQueryData(BuildContext context) {
-    return context.adaptMediaQueryDataByDesignWidth(designWidth);
+    final FlutterView view = View.of(context);
+    return context.adaptMediaQueryDataByDesignWidth(designWidthCreator.call(WidgetsBinding.instance, view));
   }
 
   ScreenAdapter._();

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 extension SizeExt on Size {
   double devicePixelRatioByWidth(double designWidth) {
-    return (width < height ? width : height) / designWidth;
+    return width / designWidth;
   }
 }
 
