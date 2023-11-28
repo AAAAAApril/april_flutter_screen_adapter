@@ -6,13 +6,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'bindings/gesture_binding.dart';
-import 'bindings/renderer_binding.dart';
 import 'screen_adapter.dart';
 import 'extensions.dart';
 
-class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding
-    with ScreenAdapterGestureBinding, ScreenAdapterRendererBinding {
+class ScreenAdapterWidgetsFlutterBinding extends WidgetsFlutterBinding {
   static WidgetsBinding ensureInitialized() {
     if (_instance == null) {
       ScreenAdapterWidgetsFlutterBinding._();
